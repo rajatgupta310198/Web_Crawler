@@ -7,14 +7,19 @@ from urllib import error
 
 
 class Bot():
-    def __init__(self,url):
+    def __init__(self,url,breadth=5):
         self.url = url # crwaling url
         self.visited_urls = set()
         self.base_url = url
         self.inQ_urls = deque([])
+        self.breadth  = breadth
 
     def crawl(self,url):
-        self.visited_urls.add(self.url)
+        self.visited_urls.add(url)
+        self.breadth -= 1
+        if self.breadth == 0:
+            self.inQ_urls.clear()
+            return
         print(self.visited_urls)
         try:
             response = urlopen(self.url)
@@ -35,16 +40,18 @@ class Bot():
             self.url = self.inQ_urls.popleft()
             self.crawl(self.url)
 
-        self.url = self.inQ_urls.popleft()
-        self.crawl(self.url)
+        if not self.inQ_urls:
+            return
+        else:
+            self.url = self.inQ_urls.popleft()
+            self.crawl(self.url)
 
     def save(self):
-        s = MyParser()
+        s = MyParser(self.base_url,self.base_url)
         s.feed(self.base_url)
-        name = s.get_name()
-        with open(name,'wb') as fp:
+        with open('file.txt','wb') as fp:
             for i in self.visited_urls:
-                fp.write(i)
+                fp.write(i+"\n")
 
         fp.close()
 
@@ -65,7 +72,6 @@ class MyParser(HTMLParser):
                     url  = parse.urljoin(self.base_url,value)
                     #print(url)
                     self.linlks_dis.add(url)
-
 
     def get_links(self):
         return self.linlks_dis
