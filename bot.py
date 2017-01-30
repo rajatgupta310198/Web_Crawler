@@ -3,25 +3,37 @@ from collections import deque
 from urllib.request import urlopen
 from urllib.parse import urlparse
 from urllib import parse
+from urllib import error
+
 
 class Bot():
     def __init__(self,url):
         self.url = url # crwaling url
-        self.visited_urls = []
+        self.visited_urls = set()
         self.base_url = url
         self.inQ_urls = deque([])
 
-
     def crawl(self,url):
-        self.visited_urls.append(self.url)
-        response = urlopen(self.url)
-        html_bytes = response.read()
-        html = html_bytes.decode("utf-8")
-        myparser = MyParser(self.url,self.url)
-        myparser.feed(html)
-        dis_links = myparser.get_links()
-        for i in dis_links:
-            self.inQ_urls.append(i)
+        self.visited_urls.add(self.url)
+        print(self.visited_urls)
+        try:
+            response = urlopen(self.url)
+            html_bytes = response.read()
+            html = html_bytes.decode("utf-8")
+            myparser = MyParser(self.url, self.url)
+            myparser.feed(html)
+            dis_links = myparser.get_links()
+            for i in dis_links:
+                self.inQ_urls.append(i)
+        except error.HTTPError:
+            self.url = self.inQ_urls.popleft()
+            self.crawl(self.url)
+        except error.URLError:
+            self.url = self.inQ_urls.popleft()
+            self.crawl(self.url)
+        except UnicodeDecodeError:
+            self.url = self.inQ_urls.popleft()
+            self.crawl(self.url)
 
         self.url = self.inQ_urls.popleft()
         self.crawl(self.url)
@@ -36,6 +48,7 @@ class Bot():
 
         fp.close()
 
+
 class MyParser(HTMLParser):
 
     def __init__(self,base_url,page_url):
@@ -48,16 +61,14 @@ class MyParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == 'a':
             for (attr,value) in attrs:
-                if attr == 'href':
+                if attr == 'href' and value != 'mailto:$':
                     url  = parse.urljoin(self.base_url,value)
+                    #print(url)
                     self.linlks_dis.add(url)
-                    print(url)
-
 
 
     def get_links(self):
         return self.linlks_dis
-
 
     def get_name(self):
         o = urlparse(self.base_url)
