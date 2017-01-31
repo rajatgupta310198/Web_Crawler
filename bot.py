@@ -40,11 +40,21 @@ class Bot():
             self.url = self.inQ_urls.popleft()
             self.crawl(self.url)
 
-        if self.inQ_urls.count(0):
-            return
-        else:
-            self.url = self.inQ_urls.popleft()
-            self.crawl(self.url)
+        except ValueError:
+        	print('Unknow url :',self.url,'enter complete for e.g http://exapmle.com')
+        	exit()
+
+        except IndexError:
+        	print('Completed..')
+
+        try:
+        	self.url = self.inQ_urls.popleft()
+        	self.crawl(self.url)
+
+        except IndexError:
+        	print('completed crwaling...', self.base_url)
+        	return
+
 
     def save(self):
         s = MyParser(self.base_url,self.base_url)
@@ -80,3 +90,4 @@ class MyParser(HTMLParser):
         o = urlparse(self.base_url)
         self.title = o.fragement
         return self.title
+
