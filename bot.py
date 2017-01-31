@@ -25,7 +25,7 @@ class Bot():
             response = urlopen(self.url)
             html_bytes = response.read()
             html = html_bytes.decode("utf-8")
-            myparser = MyParser(self.url, self.url)
+            myparser = MyParser(self.base_url, self.url)
             myparser.feed(html)
             dis_links = myparser.get_links()
             for i in dis_links:
@@ -40,7 +40,7 @@ class Bot():
             self.url = self.inQ_urls.popleft()
             self.crawl(self.url)
 
-        if not self.inQ_urls:
+        if self.inQ_urls.count(0):
             return
         else:
             self.url = self.inQ_urls.popleft()
@@ -80,4 +80,3 @@ class MyParser(HTMLParser):
         o = urlparse(self.base_url)
         self.title = o.fragement
         return self.title
-
