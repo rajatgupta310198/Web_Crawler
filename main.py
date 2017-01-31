@@ -1,8 +1,10 @@
 import sys
 import bot
 
-url = 'http://iiitnr.ac.in/'
+url = str(sys.argv[1])
+breadth = int(sys.argv[2])
+#print(url,breadth)
 
-BOT = bot.Bot(url)
+BOT = bot.Bot(url,breadth)
 BOT.crawl(url)
-BOT.save()
+#BOT.save()
