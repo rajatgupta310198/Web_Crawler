@@ -22,7 +22,6 @@ class Bot():
         if self.breadth == 0:
             self.inQ_urls.clear()
             return
-        print(self.visited_urls)
         try:
             response = urlopen(self.url)
             html_bytes = response.read()
@@ -58,11 +57,10 @@ class Bot():
         	return
 
 
-    def save(self):
-        with open('file.txt','wb') as fp:
-            for i in self.visited_urls:
-                x = i
-                fp.write(x + '\n')
 
-        fp.close()
+    def get_crawled_urls(self):
+        return self.visited_urls
+
+
+
 
