@@ -12,7 +12,7 @@ class Bot():
         self.visited_urls = set()
         self.base_url = url
         self.inQ_urls = deque([])
-        self.breadth  = breadth
+        self.breadth  = breadth+1
 
     def crawl(self,url):
         self.visited_urls.add(url)
@@ -90,4 +90,3 @@ class MyParser(HTMLParser):
         o = urlparse(self.base_url)
         self.title = o.fragement
         return self.title
-
