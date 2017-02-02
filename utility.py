@@ -27,3 +27,11 @@ class MyParser(HTMLParser):
         o = urlparse(self.base_url)
         self.title = o.fragement
         return self.title
+
+
+def save_urls(urls):
+    f = open('file.txt',mode='w')
+    for i in urls:
+        f.write(i + '\n')
+
+    f.close()
