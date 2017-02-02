@@ -1,5 +1,6 @@
 import sys
 import bot
+import utility
 
 url = str(sys.argv[1])
 breadth = int(sys.argv[2])
@@ -7,4 +8,4 @@ breadth = int(sys.argv[2])
 
 BOT = bot.Bot(url,breadth)
 BOT.init_crawl(url)
-BOT.save()
+utility.save_urls(BOT.get_crawled_urls())
