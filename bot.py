@@ -12,7 +12,11 @@ class Bot():
         self.visited_urls = set()
         self.base_url = url
         self.inQ_urls = deque([])
-        self.breadth  = breadth+1
+        self.breadth  = breadth
+
+    def init_crawl(self,url):
+        self.crawl(url)
+        print('completed crwaling...', self.base_url)
 
     def crawl(self,url):
         self.visited_urls.add(url)
@@ -52,16 +56,15 @@ class Bot():
         	self.crawl(self.url)
 
         except IndexError:
-        	print('completed crwaling...', self.base_url)
+        	#print('completed crwaling...', self.base_url)
         	return
 
 
     def save(self):
-        s = MyParser(self.base_url,self.base_url)
-        s.feed(self.base_url)
         with open('file.txt','wb') as fp:
             for i in self.visited_urls:
-                fp.write(i+"\n")
+                x = i
+                fp.write(x + '\n')
 
         fp.close()
 
