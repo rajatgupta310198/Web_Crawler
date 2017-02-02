@@ -6,5 +6,5 @@ breadth = int(sys.argv[2])
 #print(url,breadth)
 
 BOT = bot.Bot(url,breadth)
-BOT.crawl(url)
-#BOT.save()
+BOT.init_crawl(url)
+BOT.save()
