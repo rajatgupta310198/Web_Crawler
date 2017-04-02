@@ -88,7 +88,7 @@ class Bot():
         for p_tag in soup.find_all('p'):
             p_data.append(str(p_tag.text))
 
-        data = " ".join(p_data)
+        data = "\n".join(p_data)
         save_scrap(title,data)
         return
 
