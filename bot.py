@@ -1,8 +1,8 @@
 from collections import deque
 from urllib.request import urlopen
 from urllib import error
-#from bs4 import BeutifultSoup as BS4
-from utility import MyParser,save_urls
+from bs4 import BeautifulSoup
+from utility import save_urls,save_scrap
 
 
 def is_valid_url(url):
@@ -37,18 +37,22 @@ class Bot():
             if self.breadth == 0:
                 self.inQ_urls.clear()
                 return
+
+
             html = response.decode("utf-8")
-            myparser = MyParser(self.base_url, self.url)
-            myparser.feed(html)
-            dis_links = myparser.get_links()
-            for i in dis_links:
-                self.inQ_urls.append(i)
+            soup = BeautifulSoup(html,"html.parser")
+            for i in soup.find_all('a'):
+                self.inQ_urls.append(i.get('href'))
+
+
         except error.HTTPError:
             self.url = self.inQ_urls.popleft()
             self.crawl(self.url)
+
         except error.URLError:
             self.url = self.inQ_urls.popleft()
             self.crawl(self.url)
+
         except UnicodeDecodeError:
             self.url = self.inQ_urls.popleft()
             self.crawl(self.url)
@@ -68,16 +72,31 @@ class Bot():
         	#print('completed crwaling...', self.base_url)
         	return
 
-
-
     def get_crawled_urls(self):
         return self.visited_urls
+
+    def scrape_page(self,url):
+        if is_valid_url(url) == 0:
+            print('Invalid URL' + str(url))
+            return
+
+        html = urlopen(url).read()
+        soup = BeautifulSoup(html,"html.parser")
+        #print(soup.title.string)
+        title = soup.title.string
+        p_data = []
+        for p_tag in soup.find_all('p'):
+            p_data.append(str(p_tag.text))
+
+        data = " ".join(p_data)
+        save_scrap(title,data)
+        return
 
 
 if __name__ == "__main__":
     url = input("Enter URL:")
-    breadth = int(input("Enter breadth :"))
-    bt = Bot(url,breadth)
-    bt.init_crawl(url)
-    save_urls(bt.get_crawled_urls())
+    #breadth = int(input("Enter breadth :"))
+    bt = Bot(url,2)
+    bt.scrape_page(url)
+    #save_urls(bt.get_crawled_urls())
 

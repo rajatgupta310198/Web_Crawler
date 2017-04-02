@@ -1,2 +1,2 @@
-http://rogerdudler.github.io/git-guide
-http://www.twitter.com/tfnico
+http://rogerdudler.github.io/git-guide/
+https://twitter.com/share

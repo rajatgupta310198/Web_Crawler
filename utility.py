@@ -1,3 +1,4 @@
+"""
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 from urllib import parse
@@ -28,6 +29,7 @@ class MyParser(HTMLParser):
         self.title = o.fragement
         return self.title
 
+"""
 
 def save_urls(urls):
     f = open('file.txt',mode='w')
@@ -36,3 +38,8 @@ def save_urls(urls):
 
     f.close()
 
+def save_scrap(title,data):
+    f = open(str(title)+'.txt',mode='w')
+    f.write(str(title)+'\n')
+    f.write(data)
+    f.close()
