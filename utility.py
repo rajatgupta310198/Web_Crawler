@@ -15,7 +15,7 @@ class MyParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == 'a':
             for (attr,value) in attrs:
-                if attr == 'href' and value != 'mailto:$':
+                if attr == 'href' and value != 'mailto:$' and value != 'tel:$':
                     url  = parse.urljoin(self.base_url,value)
                     #print(url)
                     self.linlks_dis.add(url)
@@ -35,3 +35,4 @@ def save_urls(urls):
         f.write(i + '\n')
 
     f.close()
+

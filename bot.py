@@ -1,7 +1,16 @@
 from collections import deque
 from urllib.request import urlopen
 from urllib import error
-from utility import MyParser
+#from bs4 import BeutifultSoup as BS4
+from utility import MyParser,save_urls
+
+
+def is_valid_url(url):
+    try:
+        resp = urlopen(url)
+        return 1
+    except error.URLError:
+        return 0
 
 
 class Bot():
@@ -13,20 +22,22 @@ class Bot():
         self.breadth  = breadth
 
     def init_crawl(self,url):
+        if is_valid_url(url) == 0:
+            print("Invalid URL " + str(url))
+            exit()
         self.crawl(url)
         print('completed crwaling...', self.base_url)
-	return 
+
 
     def crawl(self,url):
-        self.visited_urls.add(url)
-        self.breadth -= 1
-        if self.breadth == 0:
-            self.inQ_urls.clear()
-            return
         try:
-            response = urlopen(self.url)
-            html_bytes = response.read()
-            html = html_bytes.decode("utf-8")
+            response = urlopen(self.url).read()
+            self.visited_urls.add(url)
+            self.breadth -= 1
+            if self.breadth == 0:
+                self.inQ_urls.clear()
+                return
+            html = response.decode("utf-8")
             myparser = MyParser(self.base_url, self.url)
             myparser.feed(html)
             dis_links = myparser.get_links()
@@ -63,5 +74,10 @@ class Bot():
         return self.visited_urls
 
 
-
+if __name__ == "__main__":
+    url = input("Enter URL:")
+    breadth = int(input("Enter breadth :"))
+    bt = Bot(url,breadth)
+    bt.init_crawl(url)
+    save_urls(bt.get_crawled_urls())
 
