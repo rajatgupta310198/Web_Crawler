@@ -15,6 +15,7 @@ class Bot():
     def init_crawl(self,url):
         self.crawl(url)
         print('completed crwaling...', self.base_url)
+	return 
 
     def crawl(self,url):
         self.visited_urls.add(url)
