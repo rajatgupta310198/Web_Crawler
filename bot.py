@@ -4,7 +4,7 @@ from urllib import error
 from bs4 import BeautifulSoup
 from utility import save_urls,save_scrap
 
-
+#8517087325aA#
 def is_valid_url(url):
     try:
         resp = urlopen(url)
